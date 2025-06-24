@@ -1,6 +1,6 @@
 import os, sys, glob, json
 
-filenames = ['main_script', 'feature_utils', 'embed', 'utils']
+filenames = ['main_script', 'feature_utils', 'utils', 'model', 'gui_core', 'embed']
 script_name = 'save_combined_code.py'
 
 def remove_imports(lines):
@@ -21,9 +21,11 @@ def load_settings(path):
                 pass
     return {}
 
-def save_settings(path, settings):
+def save_settings(path, new_settings):
+    settings = load_settings(path)
+    settings.update(new_settings)
     with open(path, 'w') as f:
-        json.dump(settings, f)
+        json.dump(settings, f, indent=2)
 
 def get_src_dir(settings_file):
     settings = load_settings(settings_file)
