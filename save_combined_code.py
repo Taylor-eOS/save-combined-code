@@ -1,7 +1,8 @@
 import os, sys, glob, json
 
-filenames = ['main_script', 'feature_utils', 'utils', 'model', 'gui_core', 'embed']
-script_name = 'save_combined_code.py'
+SCRIPT_NAME = 'save_combined_code.py'
+SETTINGS_FILE = '.script_settings.json'
+OUTPUT_FILE = 'combined_code.txt'
 
 def remove_imports(lines):
     i = 0
@@ -40,7 +41,7 @@ def get_src_dir(settings_file):
     return src_dir, settings
 
 def get_candidates(src_dir):
-    return [f for f in glob.glob(os.path.join(src_dir, '*.py')) if os.path.basename(f) != script_name]
+    return [f for f in glob.glob(os.path.join(src_dir, '*.py')) if os.path.basename(f) != SCRIPT_NAME]
 
 def prompt_selection(candidates):
     for i, f in enumerate(candidates, 1):
@@ -72,10 +73,10 @@ def combine_files(file_list, output_path):
                 print(f"Warning: {fname} not found, skipping...")
 
 def main():
-    settings_file = os.path.join(os.path.dirname(__file__), 'settings.json')
+    settings_file = os.path.join(os.path.dirname(__file__), SETTINGS_FILE)
     src_dir, _ = get_src_dir(settings_file)
     if not src_dir: return
-    output_file = os.path.join(src_dir, 'combined_code.txt')
+    output_file = os.path.join(src_dir, OUTPUT_FILE)
     candidates = get_candidates(src_dir)
     to_process = prompt_selection(candidates) if len(sys.argv) > 1 and sys.argv[1] == '-c' else candidates
     combine_files(to_process, output_file)
